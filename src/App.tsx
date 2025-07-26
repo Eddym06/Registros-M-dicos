@@ -1,9 +1,13 @@
+// Main App component - Medical Records Management System
+// This component provides a complete medical records management interface
+// with patient data storage in localStorage and image upload capabilities
+
 import { useState, useEffect, useRef } from 'react'
-import { Button } from "/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "/components/ui/card"
-import { Input } from "/components/ui/input"
-import { Textarea } from "/components/ui/textarea"
-import { Label } from "/components/ui/label"
+import { Button } from "./components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./components/ui/card"
+import { Input } from "./components/ui/input"
+import { Textarea } from "./components/ui/textarea"
+import { Label } from "./components/ui/label"
 import { Search, Plus, Trash2, Edit, User, ClipboardList, HeartPulse, Pill, FileText, Upload, Image as ImageIcon } from "lucide-react"
 
 type PatientRecord = {
@@ -21,7 +25,7 @@ type PatientRecord = {
   createdAt: string
 }
 
-export default function MedicalRecordsApp() {
+export default function App() {
   const [records, setRecords] = useState<PatientRecord[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isFormOpen, setIsFormOpen] = useState(false)
