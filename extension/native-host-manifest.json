@@ -1,0 +1,9 @@
+{
+  "name": "com.medicalrecords.host",
+  "description": "Native Messaging Host for Medical Records Server",
+  "path": "C:\\Users\\eddym\\Downloads\\Registros-M-dicos\\extension\\native-host.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://EXTENSION_ID_HERE/"
+  ]
+}

@@ -1,201 +1,345 @@
-# Registros Médicos
+# 🏥 Medical Records - Sistema de Registros Médicos
 
-Sistema de gestión de registros médicos y historias clínicas desarrollado con React y TypeScript. Esta aplicación permite crear, editar y gestionar registros de pacientes con funcionalidades completas de almacenamiento local y subida de imágenes médicas.
+Sistema completo de gestión de registros médicos con Chrome Extension y servidor FastAPI local.
 
-## 🚀 Características
+## ✨ Características
 
-- **Gestión completa de pacientes**: Crear, editar y eliminar registros médicos
-- **Almacenamiento local**: Los datos se guardan automáticamente en localStorage
-- **Subida de imágenes**: Capacidad para adjuntar imágenes médicas a los registros
-- **Búsqueda avanzada**: Buscar pacientes por nombre o diagnósticos
-- **Interfaz responsive**: Diseño adaptable para diferentes dispositivos
-- **Formularios completos**: Campos para historial clínico, antecedentes, síntomas, diagnósticos y tratamientos
+- 📋 Gestión completa de historias clínicas
+- 🖼️ Soporte para imágenes médicas
+- 🔄 Sincronización automática con servidor local
+- 💾 Almacenamiento local en JSON (Downloads/MedicalRecords/)
+- 🚀 Inicio automático del servidor desde la extensión
+- 🌐 Compatible con Windows, Mac y Linux
+- 🔒 100% privado - sin conexión a internet
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Tecnologías
 
-- **React 18** - Biblioteca de interfaz de usuario
-- **TypeScript** - Tipado estático para JavaScript
-- **Vite** - Herramienta de construcción rápida
-- **Tailwind CSS** - Framework de CSS utilitario
-- **Lucide React** - Biblioteca de iconos
-- **shadcn/ui** - Componentes de interfaz de usuario
+- **Frontend**: React 18 + TypeScript + Tailwind CSS + Vite
+- **Backend**: FastAPI + Uvicorn + Pydantic v2
+- **Extension**: Chrome Manifest v3 + Native Messaging
+- **Storage**: JSON files + imágenes en carpeta local
 
-## 📦 Instalación y Desarrollo
+---
 
-### Prerrequisitos
+## 📦 Instalación Rápida
 
-- Node.js (versión 16 o superior)
-- npm o yarn
-
-### Instalación
-
-1. Clona el repositorio:
-```bash
-git clone https://github.com/Eddym06/Registros-M-dicos.git
-cd Registros-M-dicos
+### Windows
+```cmd
+setup.bat
 ```
 
-2. Instala las dependencias:
+### Mac/Linux
 ```bash
-npm install
+chmod +x setup.sh
+./setup.sh
 ```
 
-3. Inicia el servidor de desarrollo:
+---
+
+## 🎯 ¿Qué hace el instalador?
+
+Los scripts **`setup.bat`** (Windows) y **`setup.sh`** (Mac/Linux) **configuran TODO automáticamente**:
+
+### 1️⃣ Verificación e Instalación de Python
+✅ Detecta si Python está instalado  
+✅ Si no existe, **lo descarga e instala automáticamente**:
+   - **Windows**: Python 3.11.9 desde python.org
+   - **Mac**: Python3 vía Homebrew (instala Homebrew si no existe)
+   - **Linux**: Python3 vía apt-get/yum/dnf  
+✅ Instala dependencias: `fastapi`, `uvicorn`, `python-multipart`, `pydantic`, `Pillow`
+
+### 2️⃣ Verificación de Node.js
+✅ Detecta si Node.js está instalado  
+✅ Instala dependencias npm del proyecto  
+✅ En Mac/Linux, puede instalar Node.js vía Homebrew si no existe
+
+### 3️⃣ Construcción de la Aplicación
+✅ Compila la aplicación React con Vite  
+✅ Genera archivos optimizados en `/dist`  
+✅ Copia archivos de la extensión
+
+### 4️⃣ Configuración de Native Messaging
+✅ Registra el Native Messaging Host en el sistema  
+✅ Permite que la extensión inicie el servidor automáticamente  
+✅ Solicita el ID de la extensión durante la instalación
+
+### 5️⃣ Menú Interactivo Post-Instalación
+
+Después de la instalación, el instalador ofrece un menú:
+
+1. **Iniciar servidor FastAPI** - `http://localhost:5847`
+2. **Iniciar servidor de desarrollo** - `http://localhost:5173` (con hot reload)
+3. **Iniciar ambos servidores** - FastAPI + Dev simultáneamente
+4. **Crear iconos de la extensión** - Genera iconos desde una imagen
+5. **Abrir carpeta de datos** - Downloads/MedicalRecords/
+6. **Ver logs del Native Host** - Logs de depuración
+7. **Salir**
+
+---
+
+## 🚀 Guía de Uso
+
+### Primera Vez
+
+1. **Ejecutar el instalador**
+   ```bash
+   # Windows
+   setup.bat
+   
+   # Mac/Linux
+   chmod +x setup.sh
+   ./setup.sh
+   ```
+
+2. **Cargar la extensión en Chrome**
+   - Abrir Chrome → `chrome://extensions/`
+   - Activar **"Modo de desarrollador"**
+   - Clic en **"Cargar extensión sin empaquetar"**
+   - Seleccionar la carpeta **`extension/`**
+   - **Copiar el ID de la extensión** (ej: `jekjgpmiogcjojlmhdhnafanlfodlhkm`)
+
+3. **Registrar Native Messaging** (para inicio automático)
+   - Si el instalador lo solicita, pegar el ID de la extensión
+   - O ejecutar el instalador nuevamente y proporcionarlo en el paso 5
+
+4. **¡Listo! Usar la aplicación**
+   - Clic en el ícono de la extensión en Chrome
+   - Si el servidor no está corriendo: clic en **"🚀 Iniciar Servidor"**
+   - Clic en **"Abrir Registro Médico"**
+
+### Uso Diario
+
+**Opción 1: Desde la extensión** ⭐ *Recomendado*
+- Clic en el ícono de la extensión
+- Clic en "Iniciar Servidor" (si no está corriendo)
+- Clic en "Abrir Registro Médico"
+
+**Opción 2: Desde el instalador**
+- Ejecutar `setup.bat` / `./setup.sh`
+- Seleccionar opción **1** (Iniciar servidor FastAPI)
+- Abrir Chrome y usar la extensión
+
+**Opción 3: Manual** (línea de comandos)
 ```bash
-npm run dev
+# Windows
+python -m uvicorn server.main:app --host 127.0.0.1 --port 5847 --reload
+
+# Mac/Linux
+python3 -m uvicorn server.main:app --host 127.0.0.1 --port 5847 --reload
 ```
 
-4. Abre tu navegador y visita `http://localhost:5173`
-
-### Scripts Disponibles
-
-- `npm run dev` - Inicia el servidor de desarrollo
-- `npm run build` - Construye la aplicación para producción
-- `npm run preview` - Previsualiza la construcción de producción
-- `npm run lint` - Ejecuta el linter ESLint
-
-## 🚀 Despliegue en Vercel
-
-Este proyecto está configurado para desplegarse automáticamente en Vercel. Sigue estos pasos:
-
-### Método 1: Despliegue Automático desde GitHub
-
-1. **Configura tu repositorio en GitHub**:
-   - Asegúrate de que todos los cambios estén commitidos y pusheados a GitHub
-   - El repositorio debe ser público o tener acceso desde Vercel
-
-2. **Conecta con Vercel**:
-   - Ve a [vercel.com](https://vercel.com) y crea una cuenta o inicia sesión
-   - Haz clic en "Import Project" o "New Project"
-   - Conecta tu cuenta de GitHub y selecciona este repositorio
-   - Vercel detectará automáticamente que es un proyecto Vite
-
-3. **Configuración automática**:
-   - Vercel usará la configuración en `vercel.json` automáticamente
-   - El comando de construcción será `npm run build`
-   - El directorio de salida será `dist`
-
-4. **Despliegue**:
-   - Haz clic en "Deploy"
-   - El proyecto se desplegará automáticamente
-   - Cualquier cambio futuro en la rama principal se desplegará automáticamente
-
-### Método 2: Despliegue Manual con Vercel CLI
-
-1. **Instala Vercel CLI**:
-```bash
-npm install -g vercel
-```
-
-2. **Construye el proyecto**:
-```bash
-npm run build
-```
-
-3. **Despliega con Vercel**:
-```bash
-vercel --prod
-```
-
-### Configuración de Vercel
-
-El archivo `vercel.json` está configurado para:
-- **Manejar rutas SPA**: Todas las rutas se redirigen a `index.html` para evitar errores 404
-- **Comando de construcción**: `npm run build`
-- **Directorio de salida**: `dist` (generado por Vite)
+---
 
 ## 📁 Estructura del Proyecto
 
 ```
-├── public/                 # Archivos estáticos
-│   └── vite.svg           # Favicon
-├── src/
-│   ├── components/
-│   │   └── ui/            # Componentes de interfaz reutilizables
-│   │       ├── button.tsx
-│   │       ├── card.tsx
-│   │       ├── input.tsx
-│   │       ├── label.tsx
-│   │       └── textarea.tsx
-│   ├── lib/
-│   │   └── utils.ts       # Utilidades y funciones auxiliares
-│   ├── App.tsx            # Componente principal de la aplicación
-│   ├── main.tsx           # Punto de entrada de la aplicación
-│   └── index.css          # Estilos globales con Tailwind
-├── index.html             # Plantilla HTML principal
-├── package.json           # Configuración del proyecto y dependencias
-├── tailwind.config.cjs    # Configuración de Tailwind CSS
-├── tsconfig.json          # Configuración de TypeScript
-├── vite.config.ts         # Configuración de Vite
-├── vercel.json            # Configuración de despliegue en Vercel
-└── README.md              # Este archivo
+Registros-Médicos/
+├── setup.bat                 # ⚡ Instalador Windows (TODO incluido)
+├── setup.sh                  # ⚡ Instalador Mac/Linux (TODO incluido)
+│
+├── server/
+│   └── main.py              # Servidor FastAPI con API REST
+│
+├── src/                     # Código fuente React
+│   ├── App.tsx              # Aplicación principal
+│   ├── components/          # Componentes UI
+│   │   └── ui/             # shadcn/ui components
+│   └── services/
+│       └── api.ts          # Cliente API
+│
+├── extension/               # Extensión de Chrome
+│   ├── manifest.json       # Manifest v3
+│   ├── background.js       # Service Worker
+│   ├── popup.html          # Popup de la extensión
+│   ├── popup.js            # Lógica del popup
+│   ├── native-host.py      # Native Messaging Host
+│   ├── native-host.bat     # Wrapper Windows
+│   ├── native-host-manifest.json
+│   └── icons/              # Iconos de la extensión
+│
+├── dist/                    # Build de producción (generado)
+├── package.json
+└── vite.config.ts
 ```
-
-## 🔧 Configuración para Producción
-
-### Variables de Entorno (Opcional)
-
-Si necesitas variables de entorno, crea un archivo `.env` en la raíz del proyecto:
-
-```env
-VITE_API_URL=https://tu-api.com
-VITE_APP_NAME=Registros Médicos
-```
-
-### Optimizaciones de Construcción
-
-El proyecto ya está optimizado para producción con:
-- **Code splitting** automático
-- **Tree shaking** para reducir el tamaño del bundle
-- **Minificación** de CSS y JavaScript
-- **Compresión gzip** automática en Vercel
-
-## 🐛 Solución de Problemas
-
-### Error 404 en Rutas
-
-Si experimentas errores 404 al navegar directamente a rutas, asegúrate de que:
-1. El archivo `vercel.json` esté presente en la raíz del proyecto
-2. La configuración de reescritura esté correcta
-3. El proyecto se haya desplegado correctamente
-
-### Problemas de Construcción
-
-Si hay problemas durante la construcción:
-1. Verifica que todas las dependencias estén instaladas: `npm install`
-2. Asegúrate de que Node.js sea versión 16 o superior
-3. Intenta limpiar el caché: `rm -rf node_modules package-lock.json && npm install`
-
-### Imágenes no Cargando
-
-Las imágenes se almacenan localmente usando `URL.createObjectURL()`. En una implementación de producción, considera:
-1. Implementar un servicio de almacenamiento de imágenes
-2. Usar un servicio como Cloudinary o AWS S3
-3. Implementar compresión de imágenes
-
-## 📝 Notas de Desarrollo
-
-- Los datos se almacenan en `localStorage` del navegador
-- Las imágenes son URLs temporales generadas por `URL.createObjectURL()`
-- Para una implementación completa, considera añadir una base de datos backend
-- La aplicación es completamente offline después de la carga inicial
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## 👥 Autor
-
-**Eduardo** - [@Eddym06](https://github.com/Eddym06)
 
 ---
 
-¡Gracias por usar Registros Médicos! Si tienes alguna pregunta o sugerencia, no dudes en abrir un issue en GitHub.
+## 📍 Almacenamiento de Datos
+
+Todos los datos se guardan **localmente** en:
+
+```
+Windows: C:\Users\[Usuario]\Downloads\MedicalRecords\
+Mac:     /Users/[Usuario]/Downloads/MedicalRecords/
+Linux:   /home/[Usuario]/Downloads/MedicalRecords/
+
+MedicalRecords/
+├── patients.json        # Base de datos de pacientes
+├── images/             # Imágenes médicas subidas
+└── backup/            # Backups automáticos
+```
+
+**Backups automáticos**: Se crean automáticamente cada vez que se modifican datos, manteniendo los últimos 10 backups.
+
+---
+
+## 🔧 Desarrollo
+
+### Modo Desarrollo
+```bash
+# Terminal 1 - Servidor FastAPI con hot reload
+python -m uvicorn server.main:app --host 127.0.0.1 --port 5847 --reload
+
+# Terminal 2 - React con Vite
+npm run dev
+```
+
+### Build de Producción
+```bash
+npm run build
+node extension/build-extension.js
+```
+
+### API Endpoints
+
+- `GET /api` - Health check
+- `GET /` - Sirve la aplicación React
+- `GET /patients` - Lista todos los pacientes
+- `GET /patients/{id}` - Obtiene un paciente
+- `POST /patients` - Crea un paciente
+- `PUT /patients/{id}` - Actualiza un paciente
+- `DELETE /patients/{id}` - Elimina un paciente
+- `POST /upload` - Sube una imagen médica
+- `DELETE /images/{filename}` - Elimina una imagen
+- `GET /backup/list` - Lista backups
+- `POST /backup/restore/{filename}` - Restaura un backup
+
+---
+
+## ❓ Solución de Problemas
+
+### ⚠️ El servidor no inicia desde la extensión
+
+**Solución 1**: Verificar registro del Native Host
+```bash
+# Windows
+reg query "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.medicalrecords.host"
+
+# Mac/Linux
+cat ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.medicalrecords.host.json
+```
+
+**Solución 2**: Ejecutar instalador nuevamente
+- Ejecutar `setup.bat` / `./setup.sh`
+- Proporcionar el ID de la extensión cuando se solicite
+
+**Solución 3**: Verificar logs
+- Ver archivo: `extension/native-host.log`
+
+### ⚠️ Puerto 5847 ya está en uso
+
+```bash
+# Windows - Encontrar proceso
+netstat -ano | findstr :5847
+taskkill /PID [PID] /F
+
+# Mac/Linux - Encontrar proceso
+lsof -i :5847
+kill -9 [PID]
+```
+
+### ⚠️ Error de importación de FastAPI
+
+**Causa**: El entorno virtual no está configurado correctamente
+
+**Solución**:
+```bash
+# Windows
+python -m pip install fastapi uvicorn python-multipart pydantic Pillow
+
+# Mac/Linux
+python3 -m pip install fastapi uvicorn python-multipart pydantic Pillow
+```
+
+### ⚠️ "Python no está instalado"
+
+**Windows**:
+- El instalador `setup.bat` lo descarga automáticamente
+- Si falla, descargar manualmente: https://www.python.org/downloads/
+- **Importante**: Marcar "Add Python to PATH" durante la instalación
+
+**Mac**:
+```bash
+brew install python3
+```
+
+**Linux**:
+```bash
+sudo apt-get install python3 python3-pip
+```
+
+### ⚠️ La extensión no aparece en Chrome
+
+1. Verificar que está en "Modo de desarrollador" (`chrome://extensions/`)
+2. Asegurarse de seleccionar la carpeta `extension/` (no la raíz del proyecto)
+3. Verificar que existe el archivo `extension/manifest.json`
+
+---
+
+## 📝 Requisitos del Sistema
+
+### Mínimos
+- **Python**: 3.8 o superior
+- **Node.js**: 16 o superior
+- **Chrome**: Versión reciente
+- **SO**: Windows 10+, macOS 10.14+, Ubuntu 18.04+
+- **Espacio**: ~500MB (con dependencias)
+
+### Recomendados
+- **Python**: 3.11+
+- **Node.js**: 18 LTS o 20 LTS
+- **RAM**: 4GB disponibles
+- **Procesador**: Dual-core o superior
+
+---
+
+## 🎉 Resumen: ¿Los instaladores hacen TODO?
+
+### ✅ SÍ - Los instaladores son completos y automáticos
+
+**`setup.bat`** (Windows) y **`setup.sh`** (Mac/Linux) hacen **TODO**:
+
+1. ✅ Verifican Python y lo instalan si no existe
+2. ✅ Instalan todas las dependencias Python (FastAPI, etc.)
+3. ✅ Verifican Node.js (lo instalan en Mac/Linux si no existe)
+4. ✅ Instalan dependencias npm
+5. ✅ Construyen la aplicación React
+6. ✅ Construyen la extensión de Chrome
+7. ✅ Configuran el Native Messaging Host
+8. ✅ Ofrecen un menú para iniciar servidores, ver logs, etc.
+
+**Solo necesitas**:
+1. Ejecutar el instalador
+2. Cargar la extensión en Chrome
+3. Proporcionar el ID de la extensión (para Native Messaging)
+
+**¡Eso es todo!** 🚀
+
+---
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+
+## 👥 Autor
+
+Sistema desarrollado para gestión de registros médicos locales.
+
+---
+
+## 📮 Soporte
+
+Si encuentras algún problema:
+1. Revisa la sección "Solución de Problemas"
+2. Verifica los logs en `extension/native-host.log`
+3. Ejecuta el instalador nuevamente
